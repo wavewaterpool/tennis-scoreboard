@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Match</title>
+    <link rel="stylesheet" href="/static/tennisindex.css">
+</head>
+<body>
+    <h1>🎾 Start a New Match</h1>
+
+    <form action="/" method="post">
+        <label for="player1">Player 1 Name</label>
+        <input type="text" id="player1" name="player1" required>
+
+        <label for="player2">Player 2 Name</label>
+        <input type="text" id="player2" name="player2" required>
+
+        <button type="submit">Start Match</button>
+    </form>
+
+    <h2 style="text-align: center;">Or Load a Saved Match</h2>
+
+    <form action="/load" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".json" required>
+        <button type="submit">Upload & Load</button>
+    </form>
+</body>
+</html>

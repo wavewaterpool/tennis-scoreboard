@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tennis Match</title>
+</head>
+<body>
+    <h1>Tennis Match: {{ p1 }} vs {{ p2 }}</h1>
+
+    <h2>Score</h2>
+    <div>{{ score|safe }}</div>
+
+    <br>
+    <form action="/point/0"><button type="submit">{{ p1 }} wins point</button></form>
+    <form action="/point/1"><button type="submit">{{ p2 }} wins point</button></form>
+    <br>
+
+    {% if winner %}
+    <h2>Winner: {{ winner }}</h2>
+    {% endif %}
+
+    <h3>History</h3>
+    <ul>
+        {% for item in history %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <form action="/undo"><button type="submit">Undo Last Point</button></form>
+    <br>
+    <form action="/reset"><button type="submit">Reset Match</button></form>
+    <br>
+    <form action="/adjust"><button type="submit">Adjust Score</button></form>
+    <br>
+    <form action="/save"><button type="submit">Save Match (JSON)</button></form>
+
+    
+
+
+</body>
+</html>
