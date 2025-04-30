@@ -1,0 +1,80 @@
+body {
+    font-family: sans-serif;
+    margin: 1rem;
+    background: #f9f9f9;
+    color: #333;
+  }
+  
+  h2 {
+    text-align: center;
+  }
+  
+  form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+  
+  input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .button-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .button-row form {
+    flex: 1;
+  }
+  
+  button {
+    width: 100%;
+    height: 3rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .apply-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .undo-btn {
+    background-color: #ffc107;
+    color: #000;
+  }
+  
+  .adjust-btn {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
+  .save-btn {
+    background-color: #cc37d1;
+    color: white;
+  }
+  
+  .reset-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
