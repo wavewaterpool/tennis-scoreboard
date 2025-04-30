@@ -1,41 +1,90 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tennis Match</title>
-</head>
-<body>
-    <h1>Tennis Match: {{ p1 }} vs {{ p2 }}</h1>
+{% extends "base.html" %}
 
-    <h2>Score</h2>
-    <div>{{ score|safe }}</div>
+{% block title %}Match Score{% endblock %}
 
-    <br>
-    <form action="/point/0"><button type="submit">{{ p1 }} wins point</button></form>
-    <form action="/point/1"><button type="submit">{{ p2 }} wins point</button></form>
-    <br>
+{% block content %}
+<h2>Match Score</h2>
 
-    {% if winner %}
-    <h2>Winner: {{ winner }}</h2>
-    {% endif %}
+<!-- Scoreboard -->
+<div style="max-width: 500px; margin: 0 auto;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left;">
+                <th>Player</th>
+                <th>Sets</th>
+                <th>Games</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ match.players[0] }}</td>
+                <td>{{ match.sets_won[0] }}</td>
+                <td>{{ match.current_set.games[0] }}</td>
+                {% if match.current_game.advantage == 0 %}
+                <td>Ad</td>
+                {% else %}
+                <td>{{ match.current_game.score[0] }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>{{ match.players[1] }}</td>
+                <td>{{ match.sets_won[1] }}</td>
+                <td>{{ match.current_set.games[1] }}</td>
+                {% if match.current_game.advantage == 1 %}
+                <td>Ad</td>
+                {% else %}
+                <td>{{ match.current_game.score[1] }}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-    <h3>History</h3>
-    <ul>
-        {% for item in history %}
-        <li>{{ item }}</li>
-        {% endfor %}
-    </ul>
+<!-- Action Buttons -->
+<!-- Scoring -->
+<h3 style="margin-top: 2rem; text-align: center;">Point Won</h3>
+<div class="button-row">
+    <form action="/point/0" method="post" style="flex: 1;">
+        <button type="submit" class="apply-btn">{{ match.players[0] }}</button>
+    </form>
 
-    <br>
-    <form action="/undo"><button type="submit">Undo Last Point</button></form>
-    <br>
-    <form action="/reset"><button type="submit">Reset Match</button></form>
-    <br>
-    <form action="/adjust"><button type="submit">Adjust Score</button></form>
-    <br>
-    <form action="/save"><button type="submit">Save Match (JSON)</button></form>
+    <form action="/point/1" method="post" style="flex: 1;">
+        <button type="submit" class="apply-btn">{{ match.players[1] }}</button>
+    </form>
+</div>
 
-    
+<!-- Match Config -->
+<h3 style="margin-top: 2rem; text-align: center;">Match Configuration</h3>
+<div class="button-row" style="flex-wrap: wrap; background-color: lightgrey; border: solid; ">
+    <!-- Undo Button -->
+    <form action="/undo" method="get" style="flex: 1 1 45%;">
+        <button type="submit" class="undo-btn">Undo</button>
+    </form>
 
+    <!-- Adjust Score -->
+    <form action="/adjust" method="get" style="flex: 1 1 45%;">
+        <button type="submit" class="adjust-btn">Adjust</button>
+    </form>
 
-</body>
-</html>
+    <!-- Save Match -->
+    <form action="/save" method="get" style="flex: 1 1 45%;">
+        <button type="submit" class="save-btn">Save</button>
+    </form>
+
+    <!-- Reset Match -->
+    <form action="/reset" method="get" style="flex: 1 1 45%;">
+        <button type="submit" class="reset-btn">Reset</button>
+    </form>
+</div>
+
+<!-- Optional: Show history -->
+{% if match.history %}
+<h3 style="margin-top: 2rem; text-align: center;">Point History</h3>
+<ul style="max-width: 500px; margin: 1rem auto; padding-left: 1.2rem;">
+    {% for entry in match.history|reverse %}
+    <li>{{ entry }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

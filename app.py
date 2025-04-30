@@ -4,14 +4,16 @@ import json
 import io
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+app.secret_key = "secret_sekreto"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         p1 = request.form["player1"]
         p2 = request.form["player2"]
-        match = TennisMatch(p1, p2)
+        sudden_death = "sudden_death" in request.form
+    
+        match = TennisMatch(p1, p2, sudden_death)
         session["match"] = json.dumps(match.to_dict())
         return redirect("/match")
     return render_template("index.html")
@@ -109,7 +111,8 @@ def undo():
     return redirect("/match")
 
 
-@app.route("/point/<int:player>")
+# @app.route("/point/<int:player>")
+@app.post("/point/<int:player>")
 def point(player):
     match = load_match()
     if match:
@@ -121,7 +124,7 @@ def point(player):
 def reset():
     match = load_match()
     if match:
-        match = TennisMatch(match.players[0], match.players[1])
+        match = TennisMatch(match.players[0], match.players[1], match.sudden_death)
         save_match(match)
     return redirect("/match")
 
@@ -138,4 +141,4 @@ def save_match(match):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="192.168.0.187", debug=True)

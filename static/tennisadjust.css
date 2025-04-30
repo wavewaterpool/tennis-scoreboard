@@ -1,45 +1,59 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f1f3f5;
+    font-family: sans-serif;
+    margin: 1rem;
+    background: #f9f9f9;
     color: #333;
-    margin: 0;
-    padding: 1.5rem;
-}
-h1 {
+  }
+
+  h2 {
     text-align: center;
-    color: #007bff;
-    margin-bottom: 1.2rem;
-}
-form {
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 0 3px rgba(0,0,0,0.1);
-}
-label {
+  }
+
+  form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  label {
     display: block;
     margin-top: 1rem;
     font-weight: bold;
-}
-input[type="number"] {
+  }
+
+  input[type="number"] {
     width: 100%;
-    padding: 0.6rem;
+    padding: 0.5rem;
     font-size: 1rem;
-    margin-top: 0.3rem;
+    margin-top: 0.25rem;
     border: 1px solid #ccc;
-    border-radius: 6px;
-}
-button {
-    margin-top: 1.5rem;
+    border-radius: 4px;
+  }
+
+  .button-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .button-row form {
+    flex: 1;
+  }
+
+  button {
     width: 100%;
-    padding: 0.75rem;
+    height: 3rem;
     font-size: 1rem;
-    background: #28a745;
-    color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-}
-button:hover {
-    background: #218838;
-}
+  }
+
+  .apply-btn {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .cancel-btn {
+    background-color: #dc3545;
+    color: white;
+  }

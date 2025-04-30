@@ -8,13 +8,17 @@
     <h1>🎾 Start a New Match</h1>
 
     <form action="/" method="post">
-        <label for="player1">Player 1 Name</label>
-        <input type="text" id="player1" name="player1" required>
+        <label for="player1">Player 1 (max: 20 char)</label>
+        <input type="text" id="player1" name="player1" maxlength="20" required>
 
-        <label for="player2">Player 2 Name</label>
-        <input type="text" id="player2" name="player2" required>
+        <label for="player2">Player 2 (max: 20 char)</label>
+        <input type="text" id="player2" name="player2" maxlength="20" required>
 
         <button type="submit">Start Match</button>
+        <label>
+            <input type="checkbox" name="sudden_death">
+            Sudden Death (No Advantage at Deuce)
+        </label>
     </form>
 
     <h2 style="text-align: center;">Or Load a Saved Match</h2>

@@ -1,56 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Adjust Score</title>
-    <link rel="stylesheet" href="/static/tennisadjust.css">
-</head>
-<body>
-    <h1>Manual Score Adjustment</h1>
-    <form action="/adjust" method="post">
-        <label>Games Won - {{ match.players[0] }}:</label>
-        <input type="number" name="game_p1" id="game_p1" value="{{ match.current_set.games[0] }}" required><br><br>
+{% extends "base.html" %}
 
-        <label>Games Won - {{ match.players[1] }}:</label>
-        <input type="number" name="game_p2" id="game_p2" value="{{ match.current_set.games[1] }}" required><br><br>
+{% block title %}Adjust Score{% endblock %}
 
-        <label>Sets Won - {{ match.players[0] }}:</label>
-        <input type="number" name="set_p1" id="set_p1" value="{{ match.sets_won[0] }}" required><br><br>
+{% block content %}
+<h2>Manual Score Adjustment</h2>
 
-        <label>Sets Won - {{ match.players[1] }}:</label>
-        <input type="number" name="set_p2" id="set_p2" value="{{ match.sets_won[1] }}" required><br><br>
-        
-        <!-- <label>Current Point - {{ match.players[0] }} (0/15/30/40):</label>
+<form action="/adjust" method="post">
+    <label>Sets Won - {{ match.players[0] }}:</label>
+    <input type="number" name="set_p1" id="set_p1" value="{{ match.sets_won[0] }}" required><br><br>
+
+    <label>Sets Won - {{ match.players[1] }}:</label>
+
+    <input type="number" name="set_p2" id="set_p2" value="{{ match.sets_won[1] }}" required><br><br>
+    <label>Games Won - {{ match.players[0] }}:</label>
+    <input type="number" name="game_p1" id="game_p1" value="{{ match.current_set.games[0] }}" required><br><br>
+
+    <label>Games Won - {{ match.players[1] }}:</label>
+    <input type="number" name="game_p2" id="game_p2" value="{{ match.current_set.games[1] }}" required><br><br>
+
+    <!-- <label>Current Point - {{ match.players[0] }} (0/15/30/40):</label>
         <input type="number" name="point_p1" value="{{ match.current_game.score[0] }}"><br><br>
 
         <label>Current Point - {{ match.players[1] }} (0/15/30/40):</label>
         <input type="number" name="point_p2" value="{{ match.current_game.score[1] }}"><br><br> -->
-       
 
-        <label>Current Point - {{ match.players[0] }} (0/15/30/40):</label>
-        <select name="point_p1">
-            {% for score in [0, 15, 30, 40] %}
-                {% if score == match.current_game.score[0] %}
-                    <option value={{score}} selected="true">{{score}}</option>
-                {% else %}
-                    <option value={{score}}>{{score}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
 
-        <label>Current Point - {{ match.players[1] }} (0/15/30/40):</label>
-        <select name="point_p2">
-            {% for score in [0, 15, 30, 40] %}
-                {% if score == match.current_game.score[1] %}
-                    <option value={{score}} selected="true">{{score}}</option>
-                {% else %}
-                    <option value={{score}}>{{score}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
+    <label>Current Point - {{ match.players[0] }}:</label>
+    <select name="point_p1">
+        {% for score in [0, 15, 30, 40] %}
+        {% if score == match.current_game.score[0] %}
+        <option value={{score}} selected="true">{{score}}</option>
+        {% else %}
+        <option value={{score}}>{{score}}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
 
-        <button type="submit">Apply Adjustments</button>
-    </form>
-    <br>
-    <a href="/match">Back to Match</a>
-</body>
-</html>
+    <label>Current Point - {{ match.players[1] }}:</label>
+    <select name="point_p2">
+        {% for score in [0, 15, 30, 40] %}
+        {% if score == match.current_game.score[1] %}
+        <option value={{score}} selected="true">{{score}}</option>
+        {% else %}
+        <option value={{score}}>{{score}}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+
+    <!-- Button row -->
+    <div class="button-row">
+        <!-- Apply Button -->
+        <form action="/adjust" method="post" style="flex: 1;">
+            <button type="submit" class="apply-btn">Apply</button>
+        </form>
+
+        <!-- Cancel Button -->
+        <form action="/match" method="get" style="flex: 1;">
+            <button type="submit" class="cancel-btn">Cancel</button>
+        </form>
+    </div>
+</form>
+{% endblock %}
