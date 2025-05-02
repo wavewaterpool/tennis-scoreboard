@@ -24,8 +24,8 @@ def start_match():
         sudden_death=sudden_death, 
         best_of=num_sets,
         tiebreak_enabled=tiebreak_enabled)
-    session["match"] = json.dumps(match.to_dict())
-    return render_template("match.html", match=match)
+    save_match_to_session(match)
+    return redirect("/match")
 
 @app.route("/match", methods=["GET"])
 def match_view():
@@ -66,7 +66,7 @@ def adjust_score():
             match.current_set.winner = None
             match.match_winner = None
             match.history.append("Manual score adjustment made.")
-            save_match(match)
+            save_match_to_session(match)
 
         except Exception as e:
             print(f"Error adjusting: {e}")
@@ -84,7 +84,7 @@ def load_match_file():
         file_content = file.read()
         match_data = json.loads(file_content)
         match = TennisMatch.from_dict(match_data)
-        save_match(match)
+        save_match_to_session(match)
         return render_template("match.html", match=match)
     except Exception as e:
         print(f"Error loading match: {e}")
@@ -115,7 +115,7 @@ def undo():
     match = load_match()
     if match:
         match.undo()
-        save_match(match)
+        save_match_to_session(match)
     return redirect("/match")
 
 
@@ -127,15 +127,20 @@ def point(player):
     if match:
         """add a logic here when tiebreak mode is True"""
         match.point_won_by(player)
-        save_match(match)
+        save_match_to_session(match)
     return redirect("/match")
 
 @app.route("/reset")
 def reset():
     match = load_match()
     if match:
-        match = TennisMatch(match.players[0], match.players[1], match.sudden_death)
-        save_match(match)
+        match = TennisMatch(
+            match.players[0], 
+            match.players[1], 
+            sudden_death=match.sudden_death, 
+            best_of=match.best_of, 
+            tiebreak_enabled=match.tiebreak_enabled)
+        save_match_to_session(match)
     return redirect("/match")
 
 
@@ -145,7 +150,7 @@ def load_match():
         return TennisMatch.from_dict(data)
     return None
 
-def save_match(match):
+def save_match_to_session(match):
     session["match"] = json.dumps(match.to_dict())
 
 
