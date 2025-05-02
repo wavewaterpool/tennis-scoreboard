@@ -77,4 +77,27 @@ body {
     background-color: #dc3545;
     color: white;
   }
+
+  .point-btn-0 {
+    background-color: #28a745; /* Green - Player 1 */
+    color: white;
+  }
+  
+  .point-btn-1 {
+    background-color: #218838; /* Darker green - Player 2 */
+    color: white;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  footer a {
+    color: #666;
+    text-decoration: none;
+  }
+  
   

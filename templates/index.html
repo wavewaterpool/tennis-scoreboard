@@ -1,31 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Start Match</title>
-    <link rel="stylesheet" href="/static/tennisindex.css">
-</head>
-<body>
-    <h1>🎾 Start a New Match</h1>
+{% extends "base.html" %}
 
-    <form action="/" method="post">
-        <label for="player1">Player 1 (max: 20 char)</label>
-        <input type="text" id="player1" name="player1" maxlength="20" required>
+{% block title %}Start Match{% endblock %}
 
-        <label for="player2">Player 2 (max: 20 char)</label>
-        <input type="text" id="player2" name="player2" maxlength="20" required>
+{% block content %}
+<h1>🎾 Start a New Match</h1>
 
-        <button type="submit">Start Match</button>
-        <label>
-            <input type="checkbox" name="sudden_death">
-            Sudden Death (No Advantage at Deuce)
-        </label>
-    </form>
+<form action="/start" method="post">
+    <label for="player1">Player 1 (max: 20 char)</label>
+    <input type="text" id="player1" name="player1" maxlength="20" required placeholder="Player 1">
 
-    <h2 style="text-align: center;">Or Load a Saved Match</h2>
+    <label for="player2">Player 2 (max: 20 char)</label>
+    <input type="text" id="player2" name="player2" maxlength="20" required placeholder="Player 2">
 
-    <form action="/load" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".json" required>
-        <button type="submit">Upload & Load</button>
-    </form>
-</body>
-</html>
+    <fieldset style="margin-top: 2rem; border: 1px solid #ccc; border-radius: 6px; padding: 1rem;">
+        <legend style="font-weight: bold;">Match Settings</legend>
+
+        <div style="margin-bottom: 1rem;">
+            <label for="sudden_death">
+                <input type="checkbox" id="sudden_death" name="sudden_death" value="yes" style="margin-right: 0.5rem;">
+                Use Sudden Death for Deuce
+            </label>
+        </div>
+
+        <div>
+            <label for="num_sets">Number of Sets</label>
+            <select id="num_sets" name="num_sets"
+                style="width: 100%; padding: 0.5rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; margin-top: 0.25rem;">
+                <option value="1">1</option>
+                <option value="3" selected>3</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+    </fieldset>
+
+    <div class="button-row" style="margin-top: 2rem;">
+        <button type="submit" class="apply-btn">Start Match</button>
+    </div>
+</form>
+
+<hr style="margin: 3rem auto; max-width: 400px; border: none; border-top: 1px solid #ccc;">
+
+<h2>Load Saved Match</h2>
+
+<form action="/load" method="post" enctype="multipart/form-data">
+    <label for="matchfile">Select Match File</label>
+    <input type="file" id="matchfile" name="matchfile" accept=".json" required>
+
+    <div class="button-row">
+        <button type="submit" class="save-btn">Load Match</button>
+    </div>
+</form>
+{% endblock %}

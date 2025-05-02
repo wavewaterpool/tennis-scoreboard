@@ -6,18 +6,20 @@ import io
 app = Flask(__name__)
 app.secret_key = "secret_sekreto"
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    if request.method == "POST":
-        p1 = request.form["player1"]
-        p2 = request.form["player2"]
-        sudden_death = "sudden_death" in request.form
-    
-        match = TennisMatch(p1, p2, sudden_death)
-        session["match"] = json.dumps(match.to_dict())
-        return redirect("/match")
+@app.get("/")
+def index():      
     return render_template("index.html")
 
+@app.post("/start")
+def start_match():
+    p1 = request.form["player1"]
+    p2 = request.form["player2"]
+    sudden_death = "sudden_death" in request.form
+    num_sets = int(request.form.get("num_sets", 3))
+    
+    match = TennisMatch(p1, p2, sudden_death=sudden_death, best_of=num_sets)
+    session["match"] = json.dumps(match.to_dict())
+    return render_template("match.html", match=match)
 
 @app.route("/match", methods=["GET"])
 def match_view():
