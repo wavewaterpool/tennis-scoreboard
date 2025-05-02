@@ -37,6 +37,14 @@
                 <td>{{ match.current_game.score[1] }}</td>
                 {% endif %}
             </tr>
+            {% if match.tiebreak_mode %}
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td style="color: crimson;">Tie-break</td>
+            </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

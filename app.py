@@ -14,10 +14,16 @@ def index():
 def start_match():
     p1 = request.form["player1"]
     p2 = request.form["player2"]
-    sudden_death = "sudden_death" in request.form
+    sudden_death = bool(request.form.get("sudden_death"))
+    tiebreak_enabled = bool(request.form.get("tiebreak_enabled"))
     num_sets = int(request.form.get("num_sets", 3))
     
-    match = TennisMatch(p1, p2, sudden_death=sudden_death, best_of=num_sets)
+    match = TennisMatch(
+        p1, 
+        p2, 
+        sudden_death=sudden_death, 
+        best_of=num_sets,
+        tiebreak_enabled=tiebreak_enabled)
     session["match"] = json.dumps(match.to_dict())
     return render_template("match.html", match=match)
 
@@ -70,7 +76,7 @@ def adjust_score():
 
 @app.route("/load", methods=["POST"])
 def load_match_file():
-    file = request.files.get("file")
+    file = request.files.get("matchfile")
     if not file:
         return redirect("/")
 
@@ -79,7 +85,7 @@ def load_match_file():
         match_data = json.loads(file_content)
         match = TennisMatch.from_dict(match_data)
         save_match(match)
-        return redirect("/match")
+        return render_template("match.html", match=match)
     except Exception as e:
         print(f"Error loading match: {e}")
         return redirect("/")
@@ -117,7 +123,9 @@ def undo():
 @app.post("/point/<int:player>")
 def point(player):
     match = load_match()
+    print(f"inside point route -> tennis game type: {type(match.current_game)}")
     if match:
+        """add a logic here when tiebreak mode is True"""
         match.point_won_by(player)
         save_match(match)
     return redirect("/match")

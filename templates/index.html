@@ -12,16 +12,11 @@
     <label for="player2">Player 2 (max: 20 char)</label>
     <input type="text" id="player2" name="player2" maxlength="20" required placeholder="Player 2">
 
+    <!-- Match Settings -->
     <fieldset style="margin-top: 2rem; border: 1px solid #ccc; border-radius: 6px; padding: 1rem;">
         <legend style="font-weight: bold;">Match Settings</legend>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="sudden_death">
-                <input type="checkbox" id="sudden_death" name="sudden_death" value="yes" style="margin-right: 0.5rem;">
-                Use Sudden Death for Deuce
-            </label>
-        </div>
-
+        <!-- Number of Sets -->
         <div>
             <label for="num_sets">Number of Sets</label>
             <select id="num_sets" name="num_sets"
@@ -31,6 +26,23 @@
                 <option value="5">5</option>
             </select>
         </div>
+
+        <!-- Tie Break -->
+        <div style="margin-top: 1rem;">
+            <label for="tiebreak_enabled">
+              <input type="checkbox" checked id="tiebreak_enabled" name="tiebreak_enabled" value="yes" style="margin-right: 0.5rem;">
+              Enable Tie-Break
+            </label>
+          </div>
+
+        <!-- Sudden Death -->
+        <div style="margin-bottom: 1rem;">
+            <label for="sudden_death">
+                <input type="checkbox" id="sudden_death" name="sudden_death" value="yes" style="margin-right: 0.5rem;">
+                Use Sudden Death for Deuce
+            </label>
+        </div>
+
     </fieldset>
 
     <div class="button-row" style="margin-top: 2rem;">

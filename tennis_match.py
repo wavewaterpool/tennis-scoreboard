@@ -35,12 +35,35 @@ class TennisGame:
         self.advantage = None
         self.winner = None
 
+class TennisTieBreakGame:
+    def __init__(self):
+        self.score = [0, 0]
+        self.advantage = None
+        self.winner = None
+
+    def point_won_by(self, player_index):
+        if self.winner is not None:
+            return # Game already over
+        
+        self.score[player_index] += 1
+        if self.has_winner():
+            self.winner = player_index
+            return self.winner
+
+    def has_winner(self):
+        player1_score, player2_score = self.score
+        return (player1_score >=7 or player2_score >=7) and abs(player1_score - player2_score) >= 2
+    
+    def reset(self):
+        self.score = [0, 0]
+        self.advantage = None
+        self.winner = None
 
 class TennisSet:
     def __init__(self):
         self.games = [0, 0]
         self.winner = None
-
+        
     def game_won_by(self, player_index):
         self.games[player_index] += 1
         opponent = 1 - player_index
@@ -51,9 +74,8 @@ class TennisSet:
         self.games = [0, 0]
         self.winner = None
 
-
 class TennisMatch:
-    def __init__(self, player1, player2, sudden_death=False, best_of=3):
+    def __init__(self, player1, player2, sudden_death=False, best_of=3, tiebreak_enabled=True):
         self.players = [player1, player2]
         self.sets_won = [0, 0]
         self.best_of = best_of
@@ -63,6 +85,8 @@ class TennisMatch:
         self.history = []
         self.snapshots = []
         self.sudden_death = sudden_death
+        self.tiebreak_enabled = tiebreak_enabled
+        self.tiebreak_mode = False
 
     def point_won_by(self, player_index):
         if self.match_winner:
@@ -71,21 +95,51 @@ class TennisMatch:
         # 🛑 Take a snapshot BEFORE applying changes
         self.take_snapshot()
 
+        #if in tie-break mode
+        if self.tiebreak_mode:
+            self.current_game.point_won_by(player_index)
+            if self.current_game.winner is not None:
+                self.win_set(self.current_game.winner)
+                self.start_new_set()
+            return
+        
+        # Regular game mode, not in tie-break mode
         game_winner = self.current_game.point_won_by(player_index, self.sudden_death)
         if game_winner is not None:
             self.current_set.game_won_by(game_winner)
             self.history.append(f"Game won by {self.players[game_winner]}")
             self.current_game.reset()
 
+            if self.tiebreak_enabled and self.current_set.games == [6, 6]:
+                self.history.append(f"Tiebreak game.")
+                self.current_game = TennisTieBreakGame()
+                self.tiebreak_mode = True
+                return
+
             if self.current_set.winner is not None:
-                self.sets_won[self.current_set.winner] += 1
-                self.history.append(f"Set won by {self.players[self.current_set.winner]}")
+                self.win_set(self.current_set.winner)
+                self.start_new_set()
+                # self.sets_won[self.current_set.winner] += 1
+                # self.history.append(f"Set won by {self.players[self.current_set.winner]}")
 
-                if self.sets_won[self.current_set.winner] > self.best_of // 2:
-                    self.match_winner = self.players[self.current_set.winner]
-                    self.history.append(f"Match won by {self.match_winner}")
-                self.current_set.reset()
+                # if self.sets_won[self.current_set.winner] > self.best_of // 2:
+                #     self.match_winner = self.players[self.current_set.winner]
+                #     self.history.append(f"Match won by {self.match_winner}")
 
+                # self.current_set.reset()
+
+    def win_set(self, player_index):
+        self.sets_won[player_index] += 1
+        self.history.append(f"Set won by {self.players[player_index]}")
+
+        if self.sets_won[player_index] > self.best_of // 2:
+            self.match_winner = self.players[player_index]
+            self.history.append(f"Match won by {self.match_winner}")
+
+    def start_new_set(self):
+        self.current_set.reset()
+        self.current_game = TennisGame()
+        self.tiebreak_mode = False
 
     def get_score_display(self):
         g = self.current_game
@@ -181,7 +235,9 @@ class TennisMatch:
             "match_winner": self.match_winner,
             "history": self.history,
             "snapshots": self.snapshots,
-            "sudden_death": self.sudden_death
+            "sudden_death": self.sudden_death,
+            "tiebreak_enabled": self.tiebreak_enabled,
+            "tiebreak_mode": self.tiebreak_mode
         }
 
     @classmethod
@@ -189,6 +245,10 @@ class TennisMatch:
         """For deserialization.
         """
         match = cls(data["players"][PLAYER_1], data["players"][PLAYER_2], sudden_death=data.get("sudden_death", False))
+        match.tiebreak_mode = data["tiebreak_mode"]
+        if match.tiebreak_mode:
+            match.current_game = TennisTieBreakGame()
+        match.tiebreak_enabled = data["tiebreak_enabled"]
         match.sets_won = data["sets_won"]
         match.current_game.score = data["current_game"]["score"]
         match.current_game.advantage = data["current_game"]["advantage"]
@@ -199,6 +259,3 @@ class TennisMatch:
         match.history = data["history"]
         match.snapshots = data.get("snapshots", [])
         return match
-
-    
-    
